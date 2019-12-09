@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class GenerateHypercube : MonoBehaviour
+namespace Surface4D
 {
-    [SerializeField] bool _saveAssetInEditor = false;
-    [SerializeField] string _path = "Assets/Hypercube.asset";
-    
-    Vector4[] HCvertices =
+    public class GenerateHypercube : MonoBehaviour
     {
+        [SerializeField] bool _saveAssetInEditor = false;
+        [SerializeField] string _path = "Assets/Hypercube.asset";
+
+        Vector4[] HCvertices =
+        {
         new Vector4(-1,-1,-1,-1), // 0
         new Vector4(-1,-1,-1, 1), // 1
         new Vector4(-1,-1, 1,-1), // 2
@@ -28,8 +30,8 @@ public class GenerateHypercube : MonoBehaviour
         new Vector4( 1, 1, 1, 1)  // 15
     };
 
-    int[] HCtriangles =
-    {
+        int[] HCtriangles =
+        {
         // respect orientation (use even permutations only)
         // fix (x,y), move (z,w)
         // (x,y) = (-1,-1): 0,1,2,3
@@ -93,53 +95,54 @@ public class GenerateHypercube : MonoBehaviour
 
     };
 
-    Color HCcolor(Vector4 v)
-    {
-        return new Color((1 + (v.x + 1) + (v.w + 1) / 2) * 0.25f,
-            (1 + (v.y + 1) + (v.w + 1) / 2) * 0.25f,
-            (1 + (v.z + 1) + (v.w + 1) / 2) * 0.25f,
-            0.5f);
-    }
-
-    Mesh CreateMesh()
-    {
-        int N = 16;
-        Vector3[] vertices = new Vector3[N];
-        Color[] colors = new Color[N];
-        Vector2[] uvs = new Vector2[N];
-        for (int i = 0; i < N; i++)
+        Color HCcolor(Vector4 v)
         {
-            vertices[i] = HCvertices[i];
-            uvs[i] = new Vector2(HCvertices[i].w, 0);
-            colors[i] = HCcolor(HCvertices[i]);
-
+            return new Color((1 + (v.x + 1) + (v.w + 1) / 2) * 0.25f,
+                (1 + (v.y + 1) + (v.w + 1) / 2) * 0.25f,
+                (1 + (v.z + 1) + (v.w + 1) / 2) * 0.25f,
+                0.5f);
         }
-        var mesh = new Mesh();
-        mesh.vertices = vertices;
-        mesh.uv2 = uvs;
-        mesh.colors = colors;
-        mesh.triangles = HCtriangles;
-        return mesh;
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        var mesh = CreateMesh();
+        Mesh CreateMesh()
+        {
+            int N = 16;
+            Vector3[] vertices = new Vector3[N];
+            Color[] colors = new Color[N];
+            Vector2[] uvs = new Vector2[N];
+            for (int i = 0; i < N; i++)
+            {
+                vertices[i] = HCvertices[i];
+                uvs[i] = new Vector2(HCvertices[i].w, 0);
+                colors[i] = HCcolor(HCvertices[i]);
+
+            }
+            var mesh = new Mesh();
+            mesh.vertices = vertices;
+            mesh.uv2 = uvs;
+            mesh.colors = colors;
+            mesh.triangles = HCtriangles;
+            return mesh;
+        }
+
+        // Start is called before the first frame update
+        void Start()
+        {
+            var mesh = CreateMesh();
 #if UNITY_EDITOR
-        if (_saveAssetInEditor)
-        {
-            AssetDatabase.CreateAsset(mesh, _path);
-            AssetDatabase.SaveAssets();
-        }
+            if (_saveAssetInEditor)
+            {
+                AssetDatabase.CreateAsset(mesh, _path);
+                AssetDatabase.SaveAssets();
+            }
 #endif
 
-        gameObject.GetComponent<MeshFilter>().mesh = mesh;
-    }
+            gameObject.GetComponent<MeshFilter>().mesh = mesh;
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
+        // Update is called once per frame
+        void Update()
+        {
 
+        }
     }
 }
