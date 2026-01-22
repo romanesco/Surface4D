@@ -47,7 +47,7 @@
         v2f vert (appdata input)
         {
             float4 pos4d = float4(input.position.xyz, input.uv2.x);
-            pos4d = mul(_Rotation4D, pos4d) + _Translation4D;
+            pos4d = mul(_Rotation4D, pos4d + _Translation4D);
             //pos4d = pos4d + _Translation4D;
             float4 pos = float4(pos4d.xyz, 1);
  

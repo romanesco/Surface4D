@@ -53,7 +53,7 @@
         v2f vert (appdata input)
         {
             float4 pos4d = float4(input.position.xyz, input.uv2.x);
-            pos4d = mul(_Rotation4D, pos4d) + _Translation4D;
+            pos4d = mul(_Rotation4D, pos4d + _Translation4D);
             float4 viewPos4d = mul(_View4D, pos4d - _Camera4D);
 
             /// perspective projection
